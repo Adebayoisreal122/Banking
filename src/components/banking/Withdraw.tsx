@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowDownLeft, CheckCircle, MapPin } from 'lucide-react';
-import { transactionAPI, accountAPI } from '../../services/api';
+import React, { useState, useEffect } from "react";
+import { ArrowDownLeft, CheckCircle, MapPin } from "lucide-react";
+import { transactionAPI, accountAPI } from "../../services/api";
 
 export default function Withdraw() {
-  const [amount, setAmount] = useState('');
-  const [method, setMethod] = useState('atm');
-  const [location, setLocation] = useState('');
+  const [amount, setAmount] = useState("");
+  const [method, setMethod] = useState("atm");
+  const [location, setLocation] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [accounts, setAccounts] = useState<any[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState("");
   const [currentBalance, setCurrentBalance] = useState(0);
 
   const quickAmounts = [20, 50, 100, 200, 500];
@@ -25,7 +25,7 @@ export default function Withdraw() {
           setCurrentBalance(data[0].balance);
         }
       } catch (err) {
-        console.error('Error fetching accounts:', err);
+        console.error("Error fetching accounts:", err);
       }
     };
 
@@ -34,7 +34,7 @@ export default function Withdraw() {
 
   const handleAccountChange = (accountId: string) => {
     setSelectedAccount(accountId);
-    const account = accounts.find(acc => acc._id === accountId);
+    const account = accounts.find((acc) => acc._id === accountId);
     if (account) {
       setCurrentBalance(account.balance);
     }
@@ -42,48 +42,51 @@ export default function Withdraw() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     const withdrawAmount = parseFloat(amount);
 
     if (withdrawAmount <= 0) {
-      setError('Please enter a valid amount');
+      setError("Please enter a valid amount");
       return;
     }
 
     if (withdrawAmount > currentBalance) {
-      setError('Insufficient funds');
+      setError("Insufficient funds");
       return;
     }
 
     if (!selectedAccount) {
-      setError('Please select an account');
+      setError("Please select an account");
       return;
     }
 
     setLoading(true);
 
     try {
-      const description = method === 'atm' 
-        ? `ATM Withdrawal${location ? ` at ${location}` : ''}`
-        : 'Branch Withdrawal';
+      const description =
+        method === "atm"
+          ? `ATM Withdrawal${location ? ` at ${location}` : ""}`
+          : "Branch Withdrawal";
 
       const response = await transactionAPI.withdraw({
         accountId: selectedAccount,
         amount: withdrawAmount,
-        description
+        description,
       });
 
       setCurrentBalance(response.newBalance);
       setSuccess(true);
-      setAmount('');
-      setLocation('');
+      setAmount("");
+      setLocation("");
 
       // Hide success message after 3 seconds
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-      console.error('Withdrawal error:', err);
-      setError(err.response?.data?.error || 'Withdrawal failed. Please try again.');
+      console.error("Withdrawal error:", err);
+      setError(
+        err.response?.data?.error || "Withdrawal failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -96,7 +99,9 @@ export default function Withdraw() {
           <div className="bg-green-100 rounded-full p-3 w-16 h-16 mx-auto mb-4">
             <CheckCircle className="h-10 w-10 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Withdrawal Successful!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Withdrawal Successful!
+          </h2>
           <p className="text-gray-600 mb-4">
             Your withdrawal of ${amount} has been processed successfully.
           </p>
@@ -129,7 +134,8 @@ export default function Withdraw() {
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-blue-800">
-            <strong>Available Balance:</strong> ${currentBalance.toLocaleString()}
+            <strong>Available Balance:</strong> $
+            {currentBalance.toLocaleString()}
           </p>
         </div>
 
@@ -141,7 +147,10 @@ export default function Withdraw() {
           )}
 
           <div>
-            <label htmlFor="account" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="account"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Withdraw from Account
             </label>
             <select
@@ -153,7 +162,8 @@ export default function Withdraw() {
             >
               {accounts.map((account) => (
                 <option key={account._id} value={account._id}>
-                  {account.accountNumber} - {account.accountType} (${account.balance.toLocaleString()})
+                  {account.accountNumber} - {account.accountType} ($
+                  {account.balance.toLocaleString()})
                 </option>
               ))}
             </select>
@@ -169,13 +179,15 @@ export default function Withdraw() {
                   type="radio"
                   name="method"
                   value="atm"
-                  checked={method === 'atm'}
+                  checked={method === "atm"}
                   onChange={(e) => setMethod(e.target.value)}
                   className="mr-3"
                 />
                 <div>
                   <p className="font-medium">ATM Withdrawal</p>
-                  <p className="text-sm text-gray-500">Use any ATM with your card</p>
+                  <p className="text-sm text-gray-500">
+                    Use any ATM with your card
+                  </p>
                 </div>
               </label>
               <label className="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition">
@@ -183,7 +195,7 @@ export default function Withdraw() {
                   type="radio"
                   name="method"
                   value="branch"
-                  checked={method === 'branch'}
+                  checked={method === "branch"}
                   onChange={(e) => setMethod(e.target.value)}
                   className="mr-3"
                 />
@@ -196,7 +208,10 @@ export default function Withdraw() {
           </div>
 
           <div>
-            <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="amount"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Amount ($)
             </label>
             <input
@@ -210,7 +225,7 @@ export default function Withdraw() {
               step="0.01"
               required
             />
-            
+
             <div className="mt-3">
               <p className="text-sm text-gray-600 mb-2">Quick amounts:</p>
               <div className="flex flex-wrap gap-2">
@@ -228,9 +243,12 @@ export default function Withdraw() {
             </div>
           </div>
 
-          {method === 'atm' && (
+          {method === "atm" && (
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="location"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Preferred ATM Location (Optional)
               </label>
               <div className="relative">
@@ -249,7 +267,10 @@ export default function Withdraw() {
 
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <p className="text-sm text-gray-600">
-              💡 <strong>Note:</strong> {method === 'atm' ? 'ATM withdrawals may have daily limits.' : 'Branch withdrawals may require ID verification.'}
+              💡 <strong>Note:</strong>{" "}
+              {method === "atm"
+                ? "ATM withdrawals may have daily limits."
+                : "Branch withdrawals may require ID verification."}
             </p>
           </div>
 
@@ -258,7 +279,7 @@ export default function Withdraw() {
             disabled={loading}
             className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? 'Processing Withdrawal...' : 'Withdraw Cash'}
+            {loading ? "Processing Withdrawal..." : "Withdraw Cash"}
           </button>
         </form>
       </div>

@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowDownLeft, CheckCircle } from 'lucide-react';
-import { transactionAPI, accountAPI } from '../../services/api';
+import React, { useState, useEffect } from "react";
+import { ArrowDownLeft, CheckCircle } from "lucide-react";
+import { transactionAPI, accountAPI } from "../../services/api";
 
 export default function Deposit() {
-  const [amount, setAmount] = useState('');
-  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [accounts, setAccounts] = useState<any[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState("");
   const [currentBalance, setCurrentBalance] = useState(0);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function Deposit() {
           setCurrentBalance(data[0].balance);
         }
       } catch (err) {
-        console.error('Error fetching accounts:', err);
+        console.error("Error fetching accounts:", err);
       }
     };
 
@@ -31,7 +31,7 @@ export default function Deposit() {
 
   const handleAccountChange = (accountId: string) => {
     setSelectedAccount(accountId);
-    const account = accounts.find(acc => acc._id === accountId);
+    const account = accounts.find((acc) => acc._id === accountId);
     if (account) {
       setCurrentBalance(account.balance);
     }
@@ -39,17 +39,17 @@ export default function Deposit() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     const depositAmount = parseFloat(amount);
 
     if (depositAmount <= 0) {
-      setError('Please enter a valid amount');
+      setError("Please enter a valid amount");
       return;
     }
 
     if (!selectedAccount) {
-      setError('Please select an account');
+      setError("Please select an account");
       return;
     }
 
@@ -59,19 +59,21 @@ export default function Deposit() {
       const response = await transactionAPI.deposit({
         accountId: selectedAccount,
         amount: depositAmount,
-        description: description || 'Cash Deposit'
+        description: description || "Cash Deposit",
       });
 
       setCurrentBalance(response.newBalance);
       setSuccess(true);
-      setAmount('');
-      setDescription('');
+      setAmount("");
+      setDescription("");
 
       // Hide success message after 3 seconds
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-      console.error('Deposit error:', err);
-      setError(err.response?.data?.error || 'Deposit failed. Please try again.');
+      console.error("Deposit error:", err);
+      setError(
+        err.response?.data?.error || "Deposit failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -84,7 +86,9 @@ export default function Deposit() {
           <div className="bg-green-100 rounded-full p-3 w-16 h-16 mx-auto mb-4">
             <CheckCircle className="h-10 w-10 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Deposit Successful!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Deposit Successful!
+          </h2>
           <p className="text-gray-600 mb-4">
             Your deposit of ${amount} has been processed successfully.
           </p>
@@ -129,7 +133,10 @@ export default function Deposit() {
           )}
 
           <div>
-            <label htmlFor="account" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="account"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Select Account
             </label>
             <select
@@ -141,14 +148,18 @@ export default function Deposit() {
             >
               {accounts.map((account) => (
                 <option key={account._id} value={account._id}>
-                  {account.accountNumber} - {account.accountType} (${account.balance.toLocaleString()})
+                  {account.accountNumber} - {account.accountType} ($
+                  {account.balance.toLocaleString()})
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="amount"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Amount ($)
             </label>
             <input
@@ -165,7 +176,10 @@ export default function Deposit() {
           </div>
 
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Description (Optional)
             </label>
             <textarea
@@ -180,7 +194,8 @@ export default function Deposit() {
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
-              💡 <strong>Tip:</strong> Deposits are instant and available immediately in your account.
+              💡 <strong>Tip:</strong> Deposits are instant and available
+              immediately in your account.
             </p>
           </div>
 
@@ -189,7 +204,7 @@ export default function Deposit() {
             disabled={loading}
             className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? 'Processing Deposit...' : 'Deposit Money'}
+            {loading ? "Processing Deposit..." : "Deposit Money"}
           </button>
         </form>
       </div>

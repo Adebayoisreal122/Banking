@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Receipt, CheckCircle, Zap, Phone, Car, CreditCard } from 'lucide-react';
-import { billAPI, accountAPI } from '../../services/api';
+import React, { useState, useEffect } from "react";
+import {
+  Receipt,
+  CheckCircle,
+  Zap,
+  Phone,
+  Car,
+  CreditCard,
+} from "lucide-react";
+import { billAPI, accountAPI } from "../../services/api";
 
 export default function Bills() {
-  const [selectedBill, setSelectedBill] = useState('');
-  const [amount, setAmount] = useState('');
-  const [accountNumber, setAccountNumber] = useState('');
+  const [selectedBill, setSelectedBill] = useState("");
+  const [amount, setAmount] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [accounts, setAccounts] = useState<any[]>([]);
-  const [selectedAccount, setSelectedAccount] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState("");
   const [currentBalance, setCurrentBalance] = useState(0);
 
   useEffect(() => {
@@ -23,7 +30,7 @@ export default function Bills() {
           setCurrentBalance(data[0].balance);
         }
       } catch (err) {
-        console.error('Error fetching accounts:', err);
+        console.error("Error fetching accounts:", err);
       }
     };
 
@@ -32,7 +39,7 @@ export default function Bills() {
 
   const handleAccountChange = (accountId: string) => {
     setSelectedAccount(accountId);
-    const account = accounts.find(acc => acc._id === accountId);
+    const account = accounts.find((acc) => acc._id === accountId);
     if (account) {
       setCurrentBalance(account.balance);
     }
@@ -40,69 +47,69 @@ export default function Bills() {
 
   const billCategories = [
     {
-      id: 'utilities',
-      name: 'Utilities',
+      id: "utilities",
+      name: "Utilities",
       icon: Zap,
-      color: 'bg-yellow-100 text-yellow-600',
+      color: "bg-yellow-100 text-yellow-600",
       bills: [
-        { id: 'electricity', name: 'Electricity', company: 'PowerCorp' },
-        { id: 'gas', name: 'Natural Gas', company: 'GasUtility' },
-        { id: 'water', name: 'Water & Sewer', company: 'WaterWorks' }
-      ]
+        { id: "electricity", name: "Electricity", company: "PowerCorp" },
+        { id: "gas", name: "Natural Gas", company: "GasUtility" },
+        { id: "water", name: "Water & Sewer", company: "WaterWorks" },
+      ],
     },
     {
-      id: 'telecom',
-      name: 'Telecom',
+      id: "telecom",
+      name: "Telecom",
       icon: Phone,
-      color: 'bg-blue-100 text-blue-600',
+      color: "bg-blue-100 text-blue-600",
       bills: [
-        { id: 'mobile', name: 'Mobile Phone', company: 'MobileTech' },
-        { id: 'internet', name: 'Internet', company: 'NetProvider' },
-        { id: 'cable', name: 'Cable TV', company: 'CableVision' }
-      ]
+        { id: "mobile", name: "Mobile Phone", company: "MobileTech" },
+        { id: "internet", name: "Internet", company: "NetProvider" },
+        { id: "cable", name: "Cable TV", company: "CableVision" },
+      ],
     },
     {
-      id: 'insurance',
-      name: 'Insurance',
+      id: "insurance",
+      name: "Insurance",
       icon: Car,
-      color: 'bg-green-100 text-green-600',
+      color: "bg-green-100 text-green-600",
       bills: [
-        { id: 'auto', name: 'Auto Insurance', company: 'AutoInsure' },
-        { id: 'home', name: 'Home Insurance', company: 'HomeProtect' },
-        { id: 'health', name: 'Health Insurance', company: 'HealthCare' }
-      ]
+        { id: "auto", name: "Auto Insurance", company: "AutoInsure" },
+        { id: "home", name: "Home Insurance", company: "HomeProtect" },
+        { id: "health", name: "Health Insurance", company: "HealthCare" },
+      ],
     },
     {
-      id: 'credit',
-      name: 'Credit Cards',
+      id: "credit",
+      name: "Credit Cards",
       icon: CreditCard,
-      color: 'bg-purple-100 text-purple-600',
+      color: "bg-purple-100 text-purple-600",
       bills: [
-        { id: 'visa', name: 'Visa Card', company: 'Bank of America' },
-        { id: 'mastercard', name: 'MasterCard', company: 'Chase Bank' },
-        { id: 'amex', name: 'American Express', company: 'Amex' }
-      ]
-    }
+        { id: "visa", name: "Visa Card", company: "Bank of America" },
+        { id: "mastercard", name: "MasterCard", company: "Chase Bank" },
+        { id: "amex", name: "American Express", company: "Amex" },
+      ],
+    },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     const billAmount = parseFloat(amount);
 
     if (billAmount <= 0) {
-      setError('Please enter a valid amount');
+      setError("Please enter a valid amount");
       return;
     }
 
     if (billAmount > currentBalance) {
-      setError('Insufficient funds');
+      setError("Insufficient funds");
       return;
     }
 
     if (!selectedAccount) {
-      setError('Please select an account');
+      setError("Please select an account");
       return;
     }
 
@@ -112,21 +119,23 @@ export default function Bills() {
       const billInfo = getSelectedBillInfo();
       const response = await billAPI.pay({
         accountId: selectedAccount,
-        billerName: billInfo?.company || 'Unknown Biller',
+        billerName: billInfo?.company || "Unknown Biller",
         amount: billAmount,
-        referenceNumber: accountNumber
+        referenceNumber: accountNumber,
       });
 
       setCurrentBalance(response.newBalance);
       setSuccess(true);
-      setAmount('');
-      setAccountNumber('');
+      setAmount("");
+      setAccountNumber("");
 
       // Hide success message after 3 seconds
       setTimeout(() => setSuccess(false), 3000);
     } catch (err: any) {
-      console.error('Bill payment error:', err);
-      setError(err.response?.data?.error || 'Payment failed. Please try again.');
+      console.error("Bill payment error:", err);
+      setError(
+        err.response?.data?.error || "Payment failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
@@ -134,7 +143,7 @@ export default function Bills() {
 
   const getSelectedBillInfo = () => {
     for (const category of billCategories) {
-      const bill = category.bills.find(b => b.id === selectedBill);
+      const bill = category.bills.find((b) => b.id === selectedBill);
       if (bill) {
         return { ...bill, category };
       }
@@ -150,9 +159,12 @@ export default function Bills() {
           <div className="bg-green-100 rounded-full p-3 w-16 h-16 mx-auto mb-4">
             <CheckCircle className="h-10 w-10 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Payment Successful!
+          </h2>
           <p className="text-gray-600 mb-4">
-            Your ${amount} payment to {billInfo?.company} has been processed successfully.
+            Your ${amount} payment to {billInfo?.company} has been processed
+            successfully.
           </p>
           <p className="text-sm text-gray-500 mb-4">
             New Balance: ${currentBalance.toLocaleString()}
@@ -177,19 +189,25 @@ export default function Bills() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Pay Bills</h1>
-            <p className="text-gray-600">Pay your utilities, insurance, and other bills</p>
+            <p className="text-gray-600">
+              Pay your utilities, insurance, and other bills
+            </p>
           </div>
         </div>
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-blue-800">
-            <strong>Available Balance:</strong> ${currentBalance.toLocaleString()}
+            <strong>Available Balance:</strong> $
+            {currentBalance.toLocaleString()}
           </p>
         </div>
 
         {/* Account Selection */}
         <div className="mb-6">
-          <label htmlFor="account" className="block text-sm font-medium text-gray-700 mb-2">
+          <label
+            htmlFor="account"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
             Pay from Account
           </label>
           <select
@@ -201,7 +219,8 @@ export default function Bills() {
           >
             {accounts.map((account) => (
               <option key={account._id} value={account._id}>
-                {account.accountNumber} - {account.accountType} (${account.balance.toLocaleString()})
+                {account.accountNumber} - {account.accountType} ($
+                {account.balance.toLocaleString()})
               </option>
             ))}
           </select>
@@ -209,19 +228,31 @@ export default function Bills() {
 
         {/* Bill Categories */}
         <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">Select Bill Category</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+            Select Bill Category
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {billCategories.map((category) => {
               const Icon = category.icon;
               return (
-                <div key={category.id} className="border rounded-lg p-4 hover:border-orange-300 transition">
-                  <div className={`${category.color} p-2 rounded-full w-fit mb-3`}>
+                <div
+                  key={category.id}
+                  className="border rounded-lg p-4 hover:border-orange-300 transition"
+                >
+                  <div
+                    className={`${category.color} p-2 rounded-full w-fit mb-3`}
+                  >
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{category.name}</h3>
+                  <h3 className="font-semibold text-gray-900 mb-2">
+                    {category.name}
+                  </h3>
                   <div className="space-y-1">
                     {category.bills.map((bill) => (
-                      <label key={bill.id} className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded">
+                      <label
+                        key={bill.id}
+                        className="flex items-center text-sm cursor-pointer hover:bg-gray-50 p-1 rounded"
+                      >
                         <input
                           type="radio"
                           name="bill"
@@ -257,7 +288,10 @@ export default function Bills() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="accountNumber" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="accountNumber"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Account/Reference Number
                 </label>
                 <input
@@ -272,7 +306,10 @@ export default function Bills() {
               </div>
 
               <div>
-                <label htmlFor="amount" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="amount"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Amount ($)
                 </label>
                 <input
@@ -294,7 +331,7 @@ export default function Bills() {
               disabled={loading}
               className="w-full bg-orange-600 text-white py-3 px-4 rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              {loading ? 'Processing Payment...' : 'Pay Bill'}
+              {loading ? "Processing Payment..." : "Pay Bill"}
             </button>
           </form>
         )}
