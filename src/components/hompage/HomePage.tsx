@@ -43,19 +43,19 @@ export default function Homepage() {
   const services = [
     {
       icon: <CreditCard className="h-6 w-6" />,
-      title: "Digital Banking",
+      title: "Digital Banking ",
       description: "Open accounts instantly with no paperwork required",
       color: "from-blue-500 to-cyan-500",
     },
     {
       icon: <DollarSign className="h-6 w-6" />,
-      title: "Personal Loans",
+      title: "Personal Loans For you",
       description: "Quick approval with competitive rates from 5.5% APR",
       color: "from-purple-500 to-pink-500",
     },
     {
       icon: <BarChart3 className="h-6 w-6" />,
-      title: "Investment Tools",
+      title: "Investment Tools For You",
       description: "Grow your wealth with smart investment options",
       color: "from-orange-500 to-red-500",
     },
