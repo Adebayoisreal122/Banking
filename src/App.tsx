@@ -57,9 +57,9 @@ function App() {
       <Router>
         <div className="min-h-screen bg-gray-50">
           <Routes>
-            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/" element={<Navigate to="/" replace />} />
             <Route
-              path="/home"
+              path="/"
               element={
                 <PublicRoute>
                   <Homepage />
