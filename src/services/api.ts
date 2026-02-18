@@ -125,6 +125,12 @@ export const loanAPI = {
     const response = await apiClient.get(`/loans/${id}`);
     return response.data;
   },
+
+    repay: async (data: { loanId: string; amount: number; accountId: string }) => {
+    const response = await apiClient.post('/loans/repay', data);
+    return response.data;
+  },
+
 };
 
 // Bill Payment API calls
