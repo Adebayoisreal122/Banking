@@ -47,7 +47,7 @@ export default function Dashboard() {
             .slice(-10); // Last 10 transactions
 
           const chartArr = transactions.map((tx: any) => ({
-            name: new Date(tx.createdAt).toLocaleDateString("en-US", {
+            name: new Date(tx.createdAt).toLocaleDateString("en-NG", {
               month: "short",
               day: "numeric",
             }),
@@ -140,7 +140,7 @@ export default function Dashboard() {
             Account: {primaryAccount?.accountNumber}
           </p>
           <p className="text-2xl font-bold">
-            ${dashboard.totalBalance?.toLocaleString() || "0.00"}
+            #{dashboard.totalBalance?.toLocaleString() || "0.00"}
           </p>
           <p className="text-sm text-blue-200">Total Balance</p>
         </div>
@@ -150,7 +150,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card
           title="Available Balance"
-          value={`$${primaryAccount?.balance?.toLocaleString() || "0.00"}`}
+          value={`#${primaryAccount?.balance?.toLocaleString() || "0.00"}`}
           icon={<CreditCard className="h-6 w-6 text-blue-600" />}
           bg="bg-blue-50"
         />
@@ -162,7 +162,7 @@ export default function Dashboard() {
         />
         <Card
           title="Active Loans"
-          value={`$${totalLoans.toLocaleString()}`}
+          value={`#${totalLoans.toLocaleString()}`}
           icon={<DollarSign className="h-6 w-6 text-orange-600" />}
           bg="bg-orange-50"
         />
@@ -216,7 +216,7 @@ export default function Dashboard() {
                   <YAxis />
                   <Tooltip
                     formatter={(v) => [
-                      `$${Number(v).toLocaleString()}`,
+                      `#${Number(v).toLocaleString()}`,
                       "Balance",
                     ]}
                   />
@@ -303,7 +303,7 @@ export default function Dashboard() {
                         isCredit ? "text-green-600" : "text-red-600"
                       }`}
                     >
-                      {isCredit ? "+" : "-"}${tx.amount.toLocaleString()}
+                      {isCredit ? "+" : "-"}#{tx.amount.toLocaleString()}
                     </span>
                   </div>
                 );
@@ -360,5 +360,5 @@ function calculateMonthlyGrowth(transactions: any[]): string {
 
   const growth = credits - debits;
   const sign = growth >= 0 ? "+" : "";
-  return `${sign}$${Math.abs(growth).toLocaleString()}`;
+  return `${sign}#${Math.abs(growth).toLocaleString()}`;
 }

@@ -13,7 +13,7 @@ export default function Withdraw() {
   const [selectedAccount, setSelectedAccount] = useState("");
   const [currentBalance, setCurrentBalance] = useState(0);
 
-  const quickAmounts = [20, 50, 100, 200, 500];
+  const quickAmounts = [1000, 2000, 5000, 10000, 20000];
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -103,10 +103,10 @@ export default function Withdraw() {
             Withdrawal Successful!
           </h2>
           <p className="text-gray-600 mb-4">
-            Your withdrawal of ${amount} has been processed successfully.
+            Your withdrawal of ₦{amount} has been processed successfully.
           </p>
           <p className="text-sm text-gray-500 mb-4">
-            New Balance: ${currentBalance.toLocaleString()}
+            New Balance: ₦{currentBalance.toLocaleString()}
           </p>
           <button
             onClick={() => setSuccess(false)}
@@ -134,7 +134,7 @@ export default function Withdraw() {
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-blue-800">
-            <strong>Available Balance:</strong> $
+            <strong>Available Balance:</strong> ₦
             {currentBalance.toLocaleString()}
           </p>
         </div>
@@ -162,7 +162,7 @@ export default function Withdraw() {
             >
               {accounts.map((account) => (
                 <option key={account._id} value={account._id}>
-                  {account.accountNumber} - {account.accountType} ($
+                  {account.accountNumber} - {account.accountType} (₦
                   {account.balance.toLocaleString()})
                 </option>
               ))}
@@ -212,7 +212,7 @@ export default function Withdraw() {
               htmlFor="amount"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Amount ($)
+              Amount (₦)
             </label>
             <input
               type="number"
@@ -236,7 +236,7 @@ export default function Withdraw() {
                     onClick={() => setAmount(quickAmount.toString())}
                     className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                   >
-                    ${quickAmount}
+                    ₦{quickAmount.toLocaleString()}
                   </button>
                 ))}
               </div>

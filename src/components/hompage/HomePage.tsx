@@ -81,12 +81,7 @@ export default function Homepage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-2 rounded-lg">
-                <CreditCard className="h-6 w-6 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                SecureBank
-              </span>
+              <img src="/TrustWave.png" alt="Logo" className="h-40 w-60" />
             </div>
             <div className="hidden md:flex items-center space-x-8">
               <a
@@ -349,10 +344,7 @@ export default function Homepage() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-2 rounded-lg">
-                  <CreditCard className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-white font-bold text-lg">SecureBank</span>
+                <img src="/TrustFoot.png" alt="FootTrust" className="h-45 w-80"/>
               </div>
               <p className="text-sm">Modern banking for the digital age.</p>
             </div>
@@ -418,7 +410,7 @@ export default function Homepage() {
             </div>
           </div>
           <div className="border-t border-gray-800 pt-8 text-sm text-center">
-            <p>&copy; 2024 SecureBank. All rights reserved.</p>
+            <p>&copy; 2026 TrustWave Bank. All rights reserved.</p>
           </div>
         </div>
       </footer>

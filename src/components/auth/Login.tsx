@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
-import { CreditCard, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -68,11 +68,9 @@ export default function Login() {
         </Link>
         <div className="text-center">
           <div className="flex justify-center">
-            <div className="bg-white p-3 rounded-full">
-              <CreditCard className="h-8 w-8 text-blue-600" />
-            </div>
+              <img src="/TrustLogo.png" alt="Logo" className="h-40 w-50" />
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-white">SecureBank</h2>
+          <h2 className=" text-3xl font-bold text-white">TrustWave Bank</h2>
           <p className="mt-2 text-blue-200">Sign in to your account</p>
         </div>
 

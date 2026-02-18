@@ -90,10 +90,10 @@ export default function Deposit() {
             Deposit Successful!
           </h2>
           <p className="text-gray-600 mb-4">
-            Your deposit of ${amount} has been processed successfully.
+            Your deposit of ₦{parseFloat(amount).toLocaleString()} has been processed successfully.
           </p>
           <p className="text-sm text-gray-500 mb-4">
-            New Balance: ${currentBalance.toLocaleString()}
+            New Balance: ₦{currentBalance.toLocaleString()}
           </p>
           <button
             onClick={() => setSuccess(false)}
@@ -121,7 +121,7 @@ export default function Deposit() {
 
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <p className="text-sm text-green-800">
-            <strong>Current Balance:</strong> ${currentBalance.toLocaleString()}
+            <strong>Current Balance:</strong> ₦{currentBalance.toLocaleString()}
           </p>
         </div>
 
@@ -148,7 +148,7 @@ export default function Deposit() {
             >
               {accounts.map((account) => (
                 <option key={account._id} value={account._id}>
-                  {account.accountNumber} - {account.accountType} ($
+                  {account.accountNumber} - {account.accountType} (₦
                   {account.balance.toLocaleString()})
                 </option>
               ))}
@@ -160,7 +160,7 @@ export default function Deposit() {
               htmlFor="amount"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Amount ($)
+              Amount (₦)
             </label>
             <input
               type="number"
@@ -169,10 +169,13 @@ export default function Deposit() {
               onChange={(e) => setAmount(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
               placeholder="0.00"
-              min="0.01"
+              min="1"
               step="0.01"
               required
             />
+            <p className="text-xs text-gray-500 mt-1">
+              Minimum deposit: ₦1.00
+            </p>
           </div>
 
           <div>
@@ -188,21 +191,21 @@ export default function Deposit() {
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
-              placeholder="What's this deposit for?"
+              placeholder="What's this deposit for? (e.g., Salary, Business income, Savings)"
             />
           </div>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
             <p className="text-sm text-blue-800">
               💡 <strong>Tip:</strong> Deposits are instant and available
-              immediately in your account.
+              immediately in your account. No charges apply.
             </p>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="w-full bg-green-600 text-white py-3 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           >
             {loading ? "Processing Deposit..." : "Deposit Money"}
           </button>

@@ -1,7 +1,9 @@
 import axios from 'axios';
 
 // API base URL - change this to match your backend
-export const API_URL = 'http://localhost:3000/api';
+// export const API_URL = 'http://localhost:3000/api';
+
+export const API_URL = 'https://banking-backend-b7f7.onrender.com/api';
 
 // Create axios instance with default config
 const apiClient = axios.create({

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { CreditCard, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import axios from "axios";
 
-const API_URL = "http://localhost:3000/api";
+// const API_URL = "http://localhost:3000/api";
+
+const API_URL = "https://banking-backend-b7f7.onrender.com/api";
 
 export default function Signup() {
   const [fullName, setFullName] = useState("");
@@ -97,11 +99,9 @@ export default function Signup() {
         </Link>
         <div className="text-center">
           <div className="flex justify-center">
-            <div className="bg-white p-3 rounded-full">
-              <CreditCard className="h-8 w-8 text-blue-600" />
-            </div>
+            <img src="/TrustLogo.png" alt="Logo" className="w-40 h-50" />
           </div>
-          <h2 className="mt-6 text-3xl font-bold text-white">SecureBank</h2>
+          <h2 className="text-3xl font-bold text-white">TrustWave Bank</h2>
           <p className="mt-2 text-blue-200">Create your account</p>
         </div>
 

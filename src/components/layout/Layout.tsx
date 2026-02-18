@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import {
-  CreditCard,
   Home,
   ArrowUpRight,
   ArrowDownLeft,
@@ -45,8 +44,8 @@ export default function Layout({ children }: LayoutProps) {
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
           <div className="flex h-16 items-center justify-between px-4 border-b">
             <div className="flex items-center">
-              <CreditCard className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">SecureBank</span>
+            <img src="/TrustWave.png" alt="TrustWave" className='h-40 w-50' />
+              {/* <span className="ml-2 text-xl font-bold text-gray-900">SecureBank</span> */}
             </div>
             <button onClick={() => setSidebarOpen(false)}>
               <X className="h-6 w-6 text-gray-400" />
@@ -80,8 +79,7 @@ export default function Layout({ children }: LayoutProps) {
       <div className="hidden lg:flex lg:w-64 lg:flex-col lg:fixed lg:inset-y-0">
         <div className="flex flex-col flex-grow bg-white border-r border-gray-200">
           <div className="flex items-center h-16 px-4 border-b">
-            <CreditCard className="h-8 w-8 text-blue-600" />
-            <span className="ml-2 text-xl font-bold text-gray-900">SecureBank</span>
+            <img src="/TrustWave.png" alt="TrustWave" className='h-40 w-50' />
           </div>
           <nav className="flex-1 px-4 py-4">
             {navigation.map((item) => {
@@ -120,11 +118,11 @@ export default function Layout({ children }: LayoutProps) {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
               <User className="h-5 w-5 text-gray-400" />
-              <span className="text-sm font-medium text-gray-700">{user?.name}</span>
+              <span className="text-sm font-medium text-gray-700">{user?.fullName}</span>
             </div>
             <button
               onClick={handleLogout}
-              className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors"
+              className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 hover:text-red-700 hover:bg-gray-100 rounded-md transition-colors"
             >
               <LogOut className="h-4 w-4" />
               <span>Logout</span>
