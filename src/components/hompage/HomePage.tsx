@@ -92,9 +92,9 @@ export default function Homepage() {
   ];
 
   const team = [
-    { name: "Adaeze Okonkwo", role: "Chief Executive Officer", initials: "AO", color: "from-blue-400 to-blue-600" },
-    { name: "Emeka Nwosu", role: "Chief Technology Officer", initials: "EN", color: "from-purple-400 to-purple-600" },
-    { name: "Fatima Bello", role: "Head of Security", initials: "FB", color: "from-pink-400 to-pink-600" },
+    { name: "Adebayo Isreal", role: "Chief Executive Officer", initials: "AI", color: "from-blue-400 to-blue-600" },
+    { name: "Benjamin Opeyemi", role: "Chief Technology Officer", initials: "BO", color: "from-purple-400 to-purple-600" },
+    { name: "James Oluwaferanmi", role: "Head of Security", initials: "JO", color: "from-pink-400 to-pink-600" },
   ];
 
   const navLinks = [
@@ -116,9 +116,11 @@ export default function Homepage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
+            <Link  to="/">
             <div className="flex items-center">
               <img src="/TrustWave.png" alt="TrustWave" className="h-32 w-48 object-contain" />
             </div>
+            </Link>
 
             {/* Desktop Nav */}
             <div className="hidden md:flex items-center space-x-8">
