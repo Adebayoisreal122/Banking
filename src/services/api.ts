@@ -62,7 +62,18 @@ export const authAPI = {
     const response = await apiClient.get('/auth/profile');
     return response.data;
   },
+  updateProfile: async (data: { fullName: string; email: string; phone: string }) => {
+  const response = await apiClient.patch('/auth/profile', data);
+  return response.data;
+},
+
+changePassword: async (data: { currentPassword: string; newPassword: string }) => {
+  const response = await apiClient.patch('/auth/change-password', data);
+  return response.data;
+},
 };
+
+
 
 // Account API calls
 export const accountAPI = {

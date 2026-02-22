@@ -16,6 +16,8 @@ import Bills from "./components/banking/Bills";
 import Layout from "./components/layout/Layout";
 import Deposit from "./components/banking/Deposit";
 import Homepage from "./components/hompage/HomePage";
+import Transactions from "./components/transactions/transactions";
+import Settings from "./components/profile/settings";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
@@ -66,7 +68,7 @@ function App() {
                 </PublicRoute>
               }
             />
-                        <Route
+            <Route
               path="/login"
               element={
                 <PublicRoute>
@@ -138,6 +140,26 @@ function App() {
                 <ProtectedRoute>
                   <Layout>
                     <Bills />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Settings />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/transactions"
+              element={
+                <ProtectedRoute>
+                  <Layout>
+                    <Transactions />
                   </Layout>
                 </ProtectedRoute>
               }
