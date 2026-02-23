@@ -72,10 +72,16 @@ export default function Layout({ children }: LayoutProps) {
       {/* User info */}
       <div className="px-4 py-4 border-b border-gray-100">
         <div className="flex items-center space-x-3 bg-gray-50 rounded-xl px-3 py-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-bold text-sm">
-              {user?.fullName?.charAt(0)?.toUpperCase() || 'U'}
-            </span>
+          <div className="w-9 h-9 rounded-xl overflow-hidden flex-shrink-0">
+            {user?.avatar ? (
+              <img src={user.avatar} alt={user.fullName} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">
+                  {user?.fullName?.charAt(0)?.toUpperCase() || 'U'}
+                </span>
+              </div>
+            )}
           </div>
           <div className="min-w-0">
             <p className="text-sm font-semibold text-gray-900 truncate">{user?.fullName}</p>
@@ -164,10 +170,16 @@ export default function Layout({ children }: LayoutProps) {
               <Settings className="h-5 w-5" />
             </Link>
             <div className="flex items-center space-x-2 px-3 py-2 bg-gray-50 rounded-xl">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
-                <span className="text-white font-bold text-xs">
-                  {user?.fullName?.charAt(0)?.toUpperCase() || 'U'}
-                </span>
+              <div className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0">
+                {user?.avatar ? (
+                  <img src={user.avatar} alt={user?.fullName} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                    <span className="text-white font-bold text-xs">
+                      {user?.fullName?.charAt(0)?.toUpperCase() || 'U'}
+                    </span>
+                  </div>
+                )}
               </div>
               <span className="text-sm font-medium text-gray-700 hidden sm:block">{user?.fullName}</span>
             </div>

@@ -71,6 +71,13 @@ changePassword: async (data: { currentPassword: string; newPassword: string }) =
   const response = await apiClient.patch('/auth/change-password', data);
   return response.data;
 },
+
+uploadAvatar: async (formData: FormData) => {
+  const response = await apiClient.post('/auth/avatar', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+  return response.data;
+}
 };
 
 

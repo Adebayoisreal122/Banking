@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   User, Lock, Bell, Shield, CheckCircle, Eye, EyeOff,
-  Camera, Mail, Phone, AlertCircle,
+  Camera, Mail, Phone, AlertCircle, Upload, X, Loader,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { authAPI } from "../../services/api";
@@ -15,11 +15,19 @@ export default function Settings() {
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  // ── Profile state ──
   const [fullName, setFullName] = useState(user?.fullName || "");
   const [email, setEmail] = useState(user?.email || "");
   const [phone, setPhone] = useState(user?.phone || "");
   const [profileLoading, setProfileLoading] = useState(false);
 
+  // ── Avatar state ──
+  const [avatarPreview, setAvatarPreview] = useState<any>(user?.avatar || null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // ── Password state ──
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -28,6 +36,7 @@ export default function Settings() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
 
+  // ── Notification state ──
   const [notifications, setNotifications] = useState({
     emailTransactions: true, emailLoans: true, emailMarketing: false,
     smsTransactions: true, smsAlerts: true,
@@ -42,13 +51,60 @@ export default function Settings() {
     setTimeout(() => setErrorMsg(""), 5000);
   };
 
+  // ── Avatar handlers ──
+  const handleAvatarClick = () => fileInputRef.current?.click();
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate type
+    if (!file.type.startsWith("image/")) {
+      return showError("Please select an image file (JPG, PNG, WEBP)");
+    }
+    // Validate size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      return showError("Image must be smaller than 5MB");
+    }
+
+    setAvatarFile(file);
+    // Show local preview immediately
+    const reader = new FileReader();
+    reader.onload = (ev) => setAvatarPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const handleAvatarRemove = () => {
+    setAvatarFile(null);
+    setAvatarPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleAvatarUpload = async () => {
+    if (!avatarFile) return;
+    setAvatarUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("avatar", avatarFile);
+      const result = await authAPI.uploadAvatar(formData);
+      // result.avatarUrl is the URL saved in DB and returned by backend
+      updateUser({ avatar: result.avatarUrl });
+      setAvatarFile(null); // clear pending file — preview stays from URL
+      setAvatarPreview(result.avatarUrl);
+      showSuccess("Profile photo updated!");
+    } catch (err: any) {
+      showError(err.response?.data?.error || "Photo upload failed.");
+    } finally {
+      setAvatarUploading(false);
+    }
+  };
+
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim()) return showError("Full name is required");
     setProfileLoading(true);
     try {
       const updated = await authAPI.updateProfile({ fullName, email, phone });
-      // Sync updated fields into AuthContext state AND localStorage
       updateUser({ fullName: updated.fullName, email: updated.email, phone: updated.phone });
       showSuccess("Profile updated successfully!");
     } catch (err: any) {
@@ -143,6 +199,7 @@ export default function Settings() {
       )}
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        {/* Tabs */}
         <div className="flex border-b border-gray-100">
           {tabs.map((tab) => (
             <button key={tab.id} onClick={() => setActiveTab(tab.id)}
@@ -159,25 +216,93 @@ export default function Settings() {
           {/* ── Profile Tab ── */}
           {activeTab === "profile" && (
             <form onSubmit={handleProfileUpdate} className="space-y-5">
-              <div className="flex items-center space-x-4 pb-5 border-b border-gray-100">
-                <div className="relative">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg">
-                    <span className="text-white font-bold text-3xl">
-                      {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
-                    </span>
+
+              {/* ── Avatar Section ── */}
+              <div className="pb-5 border-b border-gray-100">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Profile Photo</p>
+                <div className="flex items-center space-x-5">
+                  {/* Avatar circle */}
+                  <div className="relative flex-shrink-0">
+                    <div className="w-24 h-24 rounded-2xl overflow-hidden shadow-lg">
+                      {avatarPreview ? (
+                        <img
+                          src={avatarPreview}
+                          alt="Profile"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                          <span className="text-white font-bold text-3xl">
+                            {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Camera overlay button */}
+                    <button
+                      type="button"
+                      onClick={handleAvatarClick}
+                      className="absolute -bottom-1.5 -right-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-2 shadow-md transition"
+                    >
+                      <Camera className="h-3.5 w-3.5" />
+                    </button>
                   </div>
-                  <button type="button" className="absolute -bottom-1 -right-1 bg-white border border-gray-200 rounded-lg p-1.5 shadow-sm hover:bg-gray-50 transition">
-                    <Camera className="h-3.5 w-3.5 text-gray-500" />
-                  </button>
-                </div>
-                <div>
-                  {/* Reads live from AuthContext — updates instantly after save */}
-                  <p className="font-semibold text-gray-900">{user?.fullName}</p>
-                  <p className="text-sm text-gray-400">{user?.email}</p>
-                  <p className="text-xs text-blue-600 mt-1 cursor-pointer hover:underline">Change photo</p>
+
+                  {/* Upload controls */}
+                  <div className="flex-1 space-y-2">
+                    <p className="font-semibold text-gray-900">{user?.fullName}</p>
+                    <p className="text-sm text-gray-400">{user?.email}</p>
+
+                    {/* Hidden file input */}
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={handleAvatarChange}
+                      className="hidden"
+                    />
+
+                    {/* Show upload/remove buttons only when a new file is selected */}
+                    {avatarFile ? (
+                      <div className="flex items-center space-x-2 pt-1">
+                        <button
+                          type="button"
+                          onClick={handleAvatarUpload}
+                          disabled={avatarUploading}
+                          className="flex items-center space-x-1.5 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-lg text-xs font-semibold transition disabled:opacity-50"
+                        >
+                          {avatarUploading
+                            ? <><Loader className="h-3.5 w-3.5 animate-spin" /><span>Uploading...</span></>
+                            : <><Upload className="h-3.5 w-3.5" /><span>Upload Photo</span></>
+                          }
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleAvatarRemove}
+                          className="flex items-center space-x-1.5 border border-gray-200 text-gray-500 hover:text-red-500 hover:border-red-200 px-3 py-1.5 rounded-lg text-xs font-medium transition"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                          <span>Cancel</span>
+                        </button>
+                        <span className="text-xs text-gray-400 truncate max-w-[120px]">{avatarFile.name}</span>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={handleAvatarClick}
+                        className="flex items-center space-x-1.5 border border-gray-200 hover:border-blue-300 hover:bg-blue-50 text-gray-600 hover:text-blue-600 px-4 py-1.5 rounded-lg text-xs font-medium transition"
+                      >
+                        <Camera className="h-3.5 w-3.5" />
+                        <span>Change Photo</span>
+                      </button>
+                    )}
+                    <p className="text-xs text-gray-400">JPG, PNG or WEBP · Max 5MB</p>
+                  </div>
                 </div>
               </div>
 
+              {/* ── Profile Fields ── */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
@@ -208,6 +333,7 @@ export default function Settings() {
                 </div>
               </div>
 
+              {/* Account info */}
               <div className="bg-gray-50 rounded-xl p-4 space-y-2">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Account Info</p>
                 <div className="flex justify-between text-sm">

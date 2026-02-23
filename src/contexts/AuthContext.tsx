@@ -7,6 +7,7 @@ interface User {
   fullName: string;
   phone?: string;
   createdAt?: string;
+  avatar?: string | null;
 }
 
 interface AuthContextType {
