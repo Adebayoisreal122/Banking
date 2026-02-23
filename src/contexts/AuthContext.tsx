@@ -17,7 +17,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   signup: (fullName: string, email: string, password: string, phone?: string) => Promise<boolean>;
   logout: () => void;
-  updateUser: (updatedFields: Partial<User>) => void; // ← new
+  updateUser: (updatedFields: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,7 +33,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     window.location.href = '/login';
   };
 
-  // ── NEW: update user in state + localStorage ──
   const updateUser = (updatedFields: Partial<User>) => {
     setUser((prev) => {
       if (!prev) return prev;
@@ -51,9 +50,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (token && userData) {
         try {
           const parsedUser = JSON.parse(userData);
-          setUser(parsedUser);
+          setUser(parsedUser); // show cached user immediately
+
           try {
-            await authAPI.getProfile();
+            // ── Sync latest data (including avatar) from DB ──
+            const freshUser = await authAPI.getProfile();
+            const synced = {
+              ...parsedUser,
+              fullName:  freshUser.fullName,
+              email:     freshUser.email,
+              phone:     freshUser.phone  ?? null,
+              avatar:    freshUser.avatar ?? null,
+              createdAt: freshUser.createdAt,
+            };
+            setUser(synced);
+            localStorage.setItem('user', JSON.stringify(synced));
           } catch (error: any) {
             if (error.response?.status === 401 || error.response?.status === 403) {
               localStorage.removeItem('token');
